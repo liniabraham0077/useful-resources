@@ -1,21 +1,20 @@
-const fs = require('fs');
-const path = require('path');
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
 
-module.exports = {
-  rules: {
-    'branch-full-prefix': [
-      2,
-      'always',
-      (msg) => {
-        const ref = fs.readFileSync(path.join('.git', 'HEAD'), 'utf8').trim();
-        const branch = ref.startsWith('ref: ') ? ref.replace('ref: refs/heads/', '') : ref;
+# Get commit message from Git
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
 
-        const isValid = msg.startsWith(`${branch}: `);
-        return [
-          isValid,
-          `❌ Commit message must start with "${branch}: "`,
-        ];
-      },
-    ],
-  },
-};
+# Get current branch name (full name including prefix like feature/auth)
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Check if commit message starts with the branch name followed by ": "
+if echo "$COMMIT_MSG" | grep -qE "^$BRANCH: "; then
+  exit 0
+else
+  echo ""
+  echo "❌ Invalid commit message!"
+  echo "➡ Commit message must start with: \"$BRANCH: ...\""
+  echo "💡 Example: $BRANCH: your message here"
+  exit 1
+fi
