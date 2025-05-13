@@ -1,0 +1,21 @@
+const fs = require('fs');
+const path = require('path');
+
+module.exports = {
+  rules: {
+    'branch-full-prefix': [
+      2,
+      'always',
+      (msg) => {
+        const ref = fs.readFileSync(path.join('.git', 'HEAD'), 'utf8').trim();
+        const branch = ref.startsWith('ref: ') ? ref.replace('ref: refs/heads/', '') : ref;
+
+        const isValid = msg.startsWith(`${branch}: `);
+        return [
+          isValid,
+          `❌ Commit message must start with "${branch}: "`,
+        ];
+      },
+    ],
+  },
+};
