@@ -2,3 +2,10 @@
 
 
 $env:Path = [Environment]::GetEnvironmentVariable("Path", "User")
+
+
+# User PATH
+[Environment]::GetEnvironmentVariable("Path", "User")
+
+# System PATH
+[Environment]::GetEnvironmentVariable("Path", "Machine")
