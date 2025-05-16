@@ -1,0 +1,4 @@
+[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\apache-jmeter-5.6.3\bin", "User")
+
+
+$env:Path = [Environment]::GetEnvironmentVariable("Path", "User")
